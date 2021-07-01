@@ -15,7 +15,7 @@ class Login:
         Label(self.login, text="비밀번호", width=15).grid(row=1, column=0)
         self.user_pw = Entry(self.login, width=25, show="●")
         Button(self.login, text="회원가입", width=20, command=self.signIn).grid(row = 2, column=0)
-        Button(self.login, text="로그인", width=20, command=self.loginCheck).grid(row = 2, column=1)
+        Button(self.login, text="로그인", width=20, command=self.login_check).grid(row = 2, column=1)
 
         self.user_id.grid(row=0, column=1)
         self.user_pw.grid(row=1, column=1)
@@ -43,9 +43,9 @@ class Login:
 
         self.signin.mainloop()
         
-    def loginCheck(self):
+    def login_check(self):
         con, cur = None, None
-        con = sqlite3.connect("gameDB")
+        con = sqlite3.connect("gameDB.db")
         cur = con.cursor()
     
         cur.execute("SELECT * FROM userTable")
@@ -75,7 +75,7 @@ class Login:
     def signIn_button(self):
     
         con, cur = None, None
-        con = sqlite3.connect("gameDB")
+        con = sqlite3.connect("gameDB.db")
         cur = con.cursor()
     
         cur.execute("SELECT * FROM userTable")

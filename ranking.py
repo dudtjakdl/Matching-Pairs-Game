@@ -22,14 +22,14 @@ class Ranking:
             self.result_label.pack()
             self.new_record(user, record, level)
             
-            self.insertData(user, record, level, time)
-            self.loadData()
+            self.insert_data(user, record, level, time)
+            self.load_data()
             self.show_rank(self.date)
             
-        def insertData(self, user, record, level, time):
+        def insert_data(self, user, record, level, time):
             con, cur = None, None
             
-            con = sqlite3.connect("gameDB")
+            con = sqlite3.connect("gameDB.db")
             cur = con.cursor()
             
             now = datetime.now()
@@ -42,9 +42,9 @@ class Ranking:
             con.commit()
             con.close()
         
-        def loadData(self):
+        def load_data(self):
             con, cur = None, None            
-            con = sqlite3.connect("gameDB")
+            con = sqlite3.connect("gameDB.db")
             cur = con.cursor()
             cur.execute("SELECT * FROM gameRecord")
 
@@ -60,7 +60,7 @@ class Ranking:
 
             #gameRecord(user char(10), level char(6), score int, time char(4), date char(20))
         def new_record(self, user, record, level):
-            self.loadData()
+            self.load_data()
             text = ""
             
             record1 = True
