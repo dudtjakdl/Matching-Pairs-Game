@@ -7,6 +7,7 @@ import tkinter.font
 
 class Ranking:
         def __init__(self, user, record, level, time, parent):
+            """랭킹보드창 위젯 생성 및 배치"""
             self.Parent = parent
             self.user = user
             
@@ -27,6 +28,7 @@ class Ranking:
             self.show_rank(self.date)
             
         def insert_data(self, user, record, level, time):
+            """게임 결과 데이터 db에 저장"""
             con, cur = None, None
             
             con = sqlite3.connect("gameDB.db")
@@ -43,6 +45,7 @@ class Ranking:
             con.close()
         
         def load_data(self):
+            """db에서 저장되어 있는 게임 기록 불러와서 배열에 저장"""
             con, cur = None, None            
             con = sqlite3.connect("gameDB.db")
             cur = con.cursor()
@@ -60,6 +63,7 @@ class Ranking:
 
             #gameRecord(user char(10), level char(6), score int, time char(4), date char(20))
         def new_record(self, user, record, level):
+            """게임 기록의 최고점수 달성 여부 검사"""
             self.load_data()
             text = ""
             
@@ -97,6 +101,7 @@ class Ranking:
             self.record_label.pack()
             
         def show_rank(self, date):
+            """랭킹보드창의 notebook 위젯 생성 및 배치"""
             notebook=tkinter.ttk.Notebook(self.rankboard)
             notebook.pack()
             
@@ -119,6 +124,7 @@ class Ranking:
             self.page2_pack()
         
         def page1_pack(self):
+            """전체 기록 페이지 세부 조정 (스크롤바, 열 추가 등등)"""
             self.treeview1=tkinter.ttk.Treeview(self.view_frame1, columns=["user", "level", 'score', 'time', 'date'], displaycolumns = ["user", "level", 'score', 'time', 'date'])
             self.treeview1.pack(side = LEFT)
             
@@ -162,6 +168,7 @@ class Ranking:
             self.input_data()
                     
         def page2_pack(self):
+            """내 기록 페이지 세부 조정 (스크롤바, 열 추가 등등)"""
             self.treeview2=tkinter.ttk.Treeview(self.view_frame2, columns=["user", "level", 'score', 'time', 'date'], displaycolumns = ["user", "level", 'score', 'time', 'date'])
             self.treeview2.pack(side = LEFT)
 
@@ -209,6 +216,7 @@ class Ranking:
             self.input_mydata()
 
         def input_data(self):
+            """배열에 저장된 전체 기록 데이터 page1 위젯에 삽입"""
             self.treeview1.delete(*(self.treeview1).get_children())
             check_list = []
             
@@ -232,6 +240,7 @@ class Ranking:
                     self.treeview1.insert('', 'end', text=str(i+1) + '위', values=tmp[i], iid=str(i)+"번")
         
         def input_mydata(self):
+            """배열에 저장된 내 기록 데이터 page2 위젯에 삽입"""
             self.treeview2.delete(*(self.treeview2).get_children())
             check_list = []
             

@@ -16,13 +16,15 @@ class Card:
             self.label.image = self.back_image
             
             self.pair = ''
-            self.front = False
+            self.front = False  # 카드의 앞뒷면 여부 (초기 상태는 뒷면) 
             
     def turn_front(self):
+        """카드의 상태를 앞면으로 설정하고 앞면 이미지로 변경"""
         self.label.configure(image = self.front_image)
         self.front = True
 
     def turn_back(self):
+        """카드의 상태를 뒷면으로 설정하고 뒷면 이미지로 변경"""
         self.label.configure(image = self.back_image)
         self.front = False
 
@@ -34,6 +36,7 @@ class Game:
         self.level_select()
         
     def level_select(self):
+        """난이도 선택 창의 위젯 생성 및 배치"""
         self.level_frame = Frame(self.Parent)
         self.level_frame.pack()
         
@@ -52,6 +55,7 @@ class Game:
         Button(self.level_frame, text = "확인", width = 15, command = self.place).pack()
         
     def place(self):
+        """게임 창의 위젯 생성 및 배치"""
         self.level = self.var.get()
         
         if self.level == 0: #난이도를 선택하지 않았을때 에러창 띄움
@@ -87,7 +91,7 @@ class Game:
         self.start_button.pack(padx = 10, pady = 10)
 
     def timer(self):
-        
+        """타이머 기능 - 1초마다 게임의 종료 여부 확인"""
         self.time_record = 0 # 걸린시간 0초로 초기화
         
         while(True):
@@ -114,10 +118,12 @@ class Game:
     
                 
     def game_start(self):
+        """게임 시작 버튼을 눌렀을때 이벤트"""
         t = threading.Thread(target = self.initial_open) # 카드 처음에 3초 뒤집기
         t.start()
         
     def game_playing(self):
+        """게임이 플레이에 필요한 변수 선언, 키보드 버튼 눌렸을시의 위젯 이벤트 선언"""
         self.card_index = 0
         self.turn_over = [] # 카드를 뒤집었을때 뒤집은 카드 리스트에 추가 (2개가 채워지면 서로 맞는지 비교)
         self.correct_pair = 0 #지금까지 맞춘 카드 쌍 총 갯수 (10이면 모든 쌍 다 맞추고 게임 종료)
@@ -134,6 +140,7 @@ class Game:
         self.card_frame.bind("<space>", self.push_space)
         
     def game_end(self):
+        """게임이 종료됐을 때 이벤트 - 랭킹보드창 띄우기"""
         self.Parent.focus_set()
         self.record = self.score + self.time
         
@@ -144,7 +151,7 @@ class Game:
         rank = ranking.Ranking(self.user, self.record, self.level, self.time_record, self.Parent)
     
     def push_A(self,event):
-
+        "A 버튼을 눌렀을때 이벤트"
         if self.card_index in [0, 5, 10, 15]:
             return
         else:
@@ -153,7 +160,7 @@ class Game:
             self.card_list[self.card_index].label.configure(bg = 'black')
     
     def push_D(self,event):
-        
+        "D 버튼을 눌렀을때 이벤트"
         if self.card_index in [4, 9, 14, 19]:
             return
         else:
@@ -162,7 +169,7 @@ class Game:
             self.card_list[self.card_index].label.configure(bg = 'black')
     
     def push_W(self,event):
-        
+        "W 버튼을 눌렀을때 이벤트"
         if self.card_index in [0, 1, 2, 3, 4]:
             return
         else:
@@ -171,7 +178,7 @@ class Game:
             self.card_list[self.card_index].label.configure(bg = 'black')
     
     def push_S(self,event):
-    
+        "S 버튼을 눌렀을때 이벤트"
         if self.card_index in [15 ,16, 17, 18, 19]:
             return
         else:
@@ -180,7 +187,7 @@ class Game:
             self.card_list[self.card_index].label.configure(bg = 'black')
     
     def push_space(self, event):
-        
+        "Space 버튼을 눌렀을때 이벤트"
         if self.card_list[self.card_index].front: # 이미 선택한 카드를 또 선택했을 때 아무 액션 없이 바로 함수 종료
             return
         
@@ -205,13 +212,14 @@ class Game:
             self.game_end()
             
                 
-    def incorrect_action(self): # 선택한 카드가 서로 다를때 뒤집는 함수 (틀렸을때 액션)
+    def incorrect_action(self):
+        """선택한 카드의 쌍이 서로 다를때 다시 뒤집는 함수 (틀렸을때 이벤트)"""
         time.sleep(0.7)
         self.a.turn_back()
         self.b.turn_back()
         
-    def score_up(self): # 점수를 올리는 함수
-        
+    def score_up(self):
+        """난이도 및 콤보 여부에 따라 게임 점수를 올리는 함수"""
         if self.level == 1:
             up_score = 5
         elif self.level == 2:
@@ -226,7 +234,7 @@ class Game:
         self.label_score.configure(text = "점수: " + str(self.score))
         
     def score_down(self):
-
+        """틀렸을때 게임 점수를 내리는 함수"""
         if self.level == 1:
             down_score = 3
         elif self.level == 2:
@@ -241,7 +249,7 @@ class Game:
         self.label_score.configure(text = "점수: " + str(self.score))
         
     def initial_open(self):
-        
+            """처음 3초간 카드 앞면을 보여주는 기능"""
             self.start_button.destroy()
             
             for i in range(len(self.card_list)):
@@ -269,6 +277,7 @@ class Game:
             self.game_playing()
             
     def create_card(self,level):
+        """게임 실행시 랜덤으로 카드 배열을 생성하여 배치하는 함수 """
         self.card_list = []
         back_name = "images/back.png"
             
@@ -288,14 +297,17 @@ class Game:
                 self.card_list[i*5 + j].label.grid(row = i, column = j)
 
     def regame(self):
+        """다시하기 버튼을 눌렀을때 이벤트"""
         self.card_frame.destroy()
         self.sub_frame.destroy()
         self.place()
 
     def reselect(self):
+        """레벨선택 버튼을 눌렀을때 이벤트"""
         self.card_frame.destroy()
         self.sub_frame.destroy()
         self.level_select()
         
     def quit(self):
+        """끝내기 버튼을 눌렀을때 이벤트"""
         self.Parent.destroy()

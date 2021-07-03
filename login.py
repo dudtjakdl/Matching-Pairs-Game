@@ -5,6 +5,7 @@ from game import *
 
 class Login:
     def __init__(self, parent):
+        """초기화면(로그인 창) 위젯 생성 및 배치"""
         self.Parent = parent
         
         self.login = Frame(parent)
@@ -21,6 +22,7 @@ class Login:
         self.user_pw.grid(row=1, column=1)
         
     def signIn(self):
+        """회원가입창 위젯 생성 및 배치"""
         self.signin = Toplevel(self.Parent)
         self.signin.title("회원가입")
     
@@ -44,6 +46,7 @@ class Login:
         self.signin.mainloop()
         
     def login_check(self):
+        """사용자가 입력한 로그인 정보를 db와 비교하여 로그인 성공 여부 체크"""
         con, cur = None, None
         con = sqlite3.connect("gameDB.db")
         cur = con.cursor()
@@ -73,7 +76,7 @@ class Login:
         game = Game(self.user,self.Parent)
         
     def signIn_button(self):
-    
+        """회원가입 창에서 사용자가 입력한 정보를 db와 비교하여 중복값이 있는지 확인"""
         con, cur = None, None
         con = sqlite3.connect("gameDB.db")
         cur = con.cursor()
